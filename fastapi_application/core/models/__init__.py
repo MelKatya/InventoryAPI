@@ -6,6 +6,7 @@ __all__ = (
     "Product",
     "Status",
     "Order",
+    "OrderItem",
 )
 
 from .base import Base
@@ -15,3 +16,4 @@ from .user import User
 from .product import Product
 from .status import Status
 from .order import Order
+from .orderitem import OrderItem

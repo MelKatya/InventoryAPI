@@ -8,6 +8,7 @@ from core.models import Base
 if TYPE_CHECKING:
     from .user import User
     from .status import Status
+    from .orderitem import OrderItem
 
 
 class Order(Base):
@@ -20,3 +21,4 @@ class Order(Base):
 
     statuses: Mapped["Status"] = relationship(back_populates="orders")
     users: Mapped["User"] = relationship(back_populates="orders")
+    orders_items: Mapped[list["OrderItem"]] = relationship(back_populates="orders")
