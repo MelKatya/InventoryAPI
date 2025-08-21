@@ -7,6 +7,7 @@ from core.models import Base
 
 if TYPE_CHECKING:
     from .role import Role
+    from .product import Product
 
 
 class User(Base):
@@ -15,3 +16,4 @@ class User(Base):
     id_role: Mapped[int] = mapped_column(ForeignKey("roles.id"))
 
     roles: Mapped["Role"] = relationship(back_populates="users")
+    products: Mapped[list["Product"]] = relationship(back_populates="users")
