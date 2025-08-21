@@ -5,6 +5,7 @@ __all__ = (
     "User",
     "Product",
     "Status",
+    "Order",
 )
 
 from .base import Base
@@ -13,3 +14,4 @@ from .role import Role
 from .user import User
 from .product import Product
 from .status import Status
+from .order import Order

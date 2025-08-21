@@ -1,0 +1,22 @@
+from datetime import datetime
+from typing import TYPE_CHECKING
+from sqlalchemy import ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from core.models import Base
+
+if TYPE_CHECKING:
+    from .user import User
+    from .status import Status
+
+
+class Order(Base):
+    customer_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    created_at: Mapped[datetime] = mapped_column(
+        default=datetime.now(),
+        server_default=func.now(),
+    )
+    status_id: Mapped[int] = mapped_column(ForeignKey("statuses.id"))
+
+    statuses: Mapped["Status"] = relationship(back_populates="orders")
+    users: Mapped["User"] = relationship(back_populates="orders")

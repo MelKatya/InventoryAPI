@@ -8,6 +8,7 @@ from core.models import Base
 if TYPE_CHECKING:
     from .role import Role
     from .product import Product
+    from .order import Order
 
 
 class User(Base):
@@ -17,3 +18,4 @@ class User(Base):
 
     roles: Mapped["Role"] = relationship(back_populates="users")
     products: Mapped[list["Product"]] = relationship(back_populates="users")
+    orders: Mapped[list["Order"]] = relationship(back_populates="users")
