@@ -7,16 +7,15 @@ from core.models import Base
 from .mixin_id import IdPKMixin
 
 if TYPE_CHECKING:
-    from .role import Role
     from .product import Product
     from .order import Order
+    from .users_roles import UserRole
 
 
 class User(IdPKMixin, Base):
     username: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
-    id_role: Mapped[int] = mapped_column(ForeignKey("roles.id"))
 
-    roles: Mapped["Role"] = relationship(back_populates="users")
     products: Mapped[list["Product"]] = relationship(back_populates="users")
     orders: Mapped[list["Order"]] = relationship(back_populates="users")
+    users_roles: Mapped[list["UserRole"]] = relationship(back_populates="users")
