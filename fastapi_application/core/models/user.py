@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
+from .mixin_id import IdPKMixin
 
 if TYPE_CHECKING:
     from .role import Role
@@ -11,7 +12,7 @@ if TYPE_CHECKING:
     from .order import Order
 
 
-class User(Base):
+class User(IdPKMixin, Base):
     username: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
     id_role: Mapped[int] = mapped_column(ForeignKey("roles.id"))

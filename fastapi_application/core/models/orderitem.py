@@ -4,13 +4,14 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
+from .mixin_id import IdPKMixin
 
 if TYPE_CHECKING:
     from .order import Order
     from .product import Product
 
 
-class OrderItem(Base):
+class OrderItem(IdPKMixin, Base):
     __tablename__ = "orders_items"
 
     order_id: Mapped[int] = mapped_column(ForeignKey("orders.id"))

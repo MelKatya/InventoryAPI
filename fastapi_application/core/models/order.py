@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
+from .mixin_id import IdPKMixin
 
 if TYPE_CHECKING:
     from .user import User
@@ -11,7 +12,7 @@ if TYPE_CHECKING:
     from .orderitem import OrderItem
 
 
-class Order(Base):
+class Order(IdPKMixin, Base):
     customer_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     created_at: Mapped[datetime] = mapped_column(
         default=datetime.now(),

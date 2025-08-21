@@ -3,13 +3,14 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base
+from .mixin_id import IdPKMixin
 
 if TYPE_CHECKING:
     from .user import User
     from .orderitem import OrderItem
 
 
-class Product(Base):
+class Product(IdPKMixin, Base):
     name: Mapped[str]
     describe: Mapped[str | None] = mapped_column(nullable=True)
     supplier_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
