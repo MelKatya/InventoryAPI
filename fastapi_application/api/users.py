@@ -26,3 +26,23 @@ async def create_user(
     return created_user
 
 
+@router.get("")
+async def get_all_users(
+        session: AsyncSession = Depends(db_helper.session_getter),
+):
+    all_users = await crud_us.get_all_users(session)
+    return all_users
+
+
+@router.get("/{user_id}")
+async def get_user_by_id():
+    ...
+
+
+@router.patch("/{user_id}")
+async def update_user_data():
+    ...
+
+
+
+
