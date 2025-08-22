@@ -22,6 +22,10 @@ class DatabaseConfig(BaseModel):
 }
 
 
+class ReferenceMappings(BaseModel):
+    roles: dict[str, int] = {"admin": 1, "supplier": 2, "customer": 3}
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(".env.template", ".env"),
@@ -31,6 +35,7 @@ class Settings(BaseSettings):
     )
     run: RunConfig = RunConfig()
     db: DatabaseConfig
+    mappings: ReferenceMappings = ReferenceMappings()
 
 
 settings = Settings()
