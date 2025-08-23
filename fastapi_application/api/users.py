@@ -4,10 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.config import settings
 from core.models import db_helper
 from core.schemas.user import UserCreateGet, UserCreate
-from security.utils import hash_password
+from security.hashed_pass import hash_password
 from crud import users as crud_us
 
-router = APIRouter(tags=[""])
+router = APIRouter(tags=["Users"])
 
 
 @router.post("/create")
