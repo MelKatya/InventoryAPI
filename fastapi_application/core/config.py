@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+BASE_DIR = Path(__file__).parent.parent
 
 class RunConfig(BaseModel):
     host: str = "0.0.0.0"
@@ -26,6 +29,14 @@ class ReferenceMappings(BaseModel):
     roles: dict[str, int] = {"admin": 1, "supplier": 2, "customer": 3}
 
 
+class JWTConfig(BaseModel):
+    private_key: Path =  BASE_DIR / "security" / "certs" / "jwt-private.pem"
+    public_key: Path =  BASE_DIR / "security" / "certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 30
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(".env.template", ".env"),
@@ -36,6 +47,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     db: DatabaseConfig
     mappings: ReferenceMappings = ReferenceMappings()
+    jwt: JWTConfig = JWTConfig()
 
 
 settings = Settings()
