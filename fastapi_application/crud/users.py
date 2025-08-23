@@ -34,3 +34,8 @@ async def get_all_users(session: AsyncSession):
     result = await session.scalars(stmt)
     return result.all()
 
+
+async def get_user_by_username(session: AsyncSession, username: str):
+    stmt = select(User).filter_by(username=username)
+    result = await session.scalars(stmt)
+    return result.one_or_none()
