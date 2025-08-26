@@ -6,6 +6,12 @@ from pydantic import BaseModel
 class UserBase(BaseModel):
     username: str
 
+class UserAuth(UserBase):
+    password: str
+
+class UserToken(BaseModel):
+    user_id: int
+    roles: list[Literal["supplier", "customer", "admin"]]
 
 class UserCreateGet(UserBase):
     password: str
