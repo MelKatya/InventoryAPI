@@ -15,8 +15,8 @@ def create_jwt(
     return encode_jwt(payload=jwt_payload, expire_timedelta=expire)
 
 
-def create_access_token(user: User):
-    jwt_payload = {"sub": str(user.id), "roles": "role"}
+def create_access_token(user: User, roles: list[str]):
+    jwt_payload = {"sub": str(user.id), "roles": roles}
     expire = timedelta(minutes=settings.jwt.access_token_expire_minutes)
     return create_jwt(
         token_type="access",
