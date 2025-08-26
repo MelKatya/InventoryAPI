@@ -5,6 +5,7 @@ from api.validate import validate_token
 from core.models import db_helper, User
 from core.schemas.token import TokenInfo
 from crud import users as crud_us
+from crud.users import get_user_roles
 from security.hashed_utils import validate_password
 from security.jwt_create import create_access_token, create_refresh_token
 
@@ -38,7 +39,8 @@ async def auth_user_jwt(
     ):
         raise authed_exc
 
-    access_token = create_access_token(user)
+    roles = await get_user_roles(session=session, user_id=user.id)
+    access_token = create_access_token(user, roles)
     refresh_token = create_refresh_token(user)
     response.set_cookie(key="refresh_token", value=refresh_token)
 
