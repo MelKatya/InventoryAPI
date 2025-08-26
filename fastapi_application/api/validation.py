@@ -39,3 +39,25 @@ def validate_access_token(token: str = Depends(oauth2_scheme)):
     return payload
 
 
+def validate_roles(roles: set[str]):
+
+    def wrapper(func):
+        @wraps(func)
+        async def validate(*args, **kwargs):
+            token: dict | None = dict(**kwargs).get("token")
+            if not token:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid token error"
+                )
+
+            current_roles = set(token.get("roles"))
+            if not roles.intersection(current_roles):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="No roles allowed"
+                )
+
+            return await func(*args, **kwargs)
+        return validate
+    return wrapper
