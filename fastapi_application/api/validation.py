@@ -1,6 +1,6 @@
 from functools import wraps
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Cookie
 from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError, ExpiredSignatureError
 
@@ -19,6 +19,11 @@ def validate_token_type(token_type: str, payload: dict):
             detail=f"Invalid token type {current_token_type} "
                    f"expected {token_type}"
         )
+
+def validate_refresh_token(refresh_token: str = Cookie()):
+    payload = decoded_jwt(refresh_token)
+    validate_token_type("refresh", payload)
+    return payload
 
 
 def validate_access_token(token: str = Depends(oauth2_scheme)):
