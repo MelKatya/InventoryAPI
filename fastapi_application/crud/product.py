@@ -15,3 +15,8 @@ async def create_new_product(
     return product
 
 
+async def get_all_products(session: AsyncSession):
+    stmt = select(Product).order_by(Product.id)
+    result = await session.scalars(stmt)
+    return result.all()
+
