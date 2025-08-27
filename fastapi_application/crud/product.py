@@ -26,3 +26,11 @@ async def get_supplier_products(session: AsyncSession, supplier_id: int):
     result = await session.scalars(stmt)
     return result.all()
 
+
+async def get_product_by_id(
+    session: AsyncSession,
+    product_id: int,
+):
+    stmt = select(Product).filter_by(id=product_id)
+    result = await session.scalars(stmt)
+    return result.one_or_none()
