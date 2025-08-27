@@ -20,3 +20,9 @@ async def get_all_products(session: AsyncSession):
     result = await session.scalars(stmt)
     return result.all()
 
+
+async def get_supplier_products(session: AsyncSession, supplier_id: int):
+    stmt = select(Product).filter_by(supplier_id=supplier_id).order_by(Product.id)
+    result = await session.scalars(stmt)
+    return result.all()
+
