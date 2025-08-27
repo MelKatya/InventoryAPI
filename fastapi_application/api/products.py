@@ -36,3 +36,14 @@ async def get_all_products(
     all_product = await prod.get_all_products(session)
     return all_product
 
+
+@router.get("/me")
+@validate_roles({"admin", "suppliers"})
+async def get_all_supplier_products(
+    session: AsyncSession = Depends(db_helper.session_getter),
+    token: dict = Depends(validate_access_token),
+):
+    supplier_id = int(token.get("sub"))
+    all_product = await prod.get_supplier_products(session, supplier_id)
+    return all_product
+
