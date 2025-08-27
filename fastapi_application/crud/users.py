@@ -24,8 +24,8 @@ async def add_role_to_user(
     user_id: int,
     roles_id: list[int],
 ):
-    new_some = [UserRole(user_id=user_id, role_id=role) for role in roles_id]
-    session.add_all(new_some)
+    user_roles = [UserRole(user_id=user_id, role_id=role) for role in roles_id]
+    session.add_all(user_roles)
     await session.commit()
 
 async def get_user_roles(
@@ -45,5 +45,11 @@ async def get_all_users(session: AsyncSession):
 
 async def get_user_by_username(session: AsyncSession, username: str):
     stmt = select(User).filter_by(username=username)
+    result = await session.scalars(stmt)
+    return result.one_or_none()
+
+
+async def get_user_by_id(session: AsyncSession, user_id: int):
+    stmt = select(User).filter_by(id=user_id)
     result = await session.scalars(stmt)
     return result.one_or_none()
