@@ -26,7 +26,7 @@ def create_access_token(user: User, roles: list[str]):
 
 
 def create_refresh_token(user: User):
-    jwt_payload = {"sub": user.id}
+    jwt_payload = {"sub": str(user.id)}
     expire = timedelta(days=settings.jwt.refresh_token_expire_days)
     return create_jwt(
         token_type="refresh",
