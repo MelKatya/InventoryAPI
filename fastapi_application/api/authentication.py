@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form, Response
 from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Annotated
 
 from api.validation import validate_access_token, validate_roles, validate_refresh_token
 from core.models import db_helper, User
@@ -62,10 +63,20 @@ async def logout_user(
 
 @router.post("/refresh")
 async def auth_refresh_jwt(
-    token: dict = Depends(validate_access_token),
+    response: Response,
+    refresh_token: dict = Depends(validate_refresh_token),
+    access_token: dict = Depends(validate_access_token),
+    session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    print(token)
-    return {"token": "sks"}
+    user_id = int(access_token.get("sub"))
+    user = await get_user_by_id(session, user_id)
+    roles = await get_user_roles(session=session, user_id=user.id)
+
+    access_token = create_access_token(user, roles)
+    refresh_token = create_refresh_token(user)
+    response.set_cookie(key="refresh_token", value=refresh_token)
+
+    return {"access_token": access_token}
 
 
 @router.get("/me")
