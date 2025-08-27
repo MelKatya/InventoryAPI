@@ -27,3 +27,12 @@ async def create_new_product(
     )
     return product
 
+
+@router.get("")
+async def get_all_products(
+    session: AsyncSession = Depends(db_helper.session_getter),
+    token: dict = Depends(validate_access_token),
+):
+    all_product = await prod.get_all_products(session)
+    return all_product
+
