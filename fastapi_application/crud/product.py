@@ -21,16 +21,32 @@ async def get_all_products(session: AsyncSession):
     return result.all()
 
 
-async def get_supplier_products(session: AsyncSession, supplier_id: int):
+async def get_supplier_products(
+    session: AsyncSession,
+    supplier_id: int
+) -> list[Product]:
     stmt = select(Product).filter_by(supplier_id=supplier_id).order_by(Product.id)
     result = await session.scalars(stmt)
-    return result.all()
+    return list(result.all())
 
 
 async def get_product_by_id(
     session: AsyncSession,
     product_id: int,
-):
+) -> Product | None:
     stmt = select(Product).filter_by(id=product_id)
     result = await session.scalars(stmt)
     return result.one_or_none()
+
+
+async def update_product(
+    session: AsyncSession,
+    product: Product,
+    product_update: ProductCreate,
+    partial: bool = False
+) -> Product:
+    for name, value in product_update.model_dump(exclude_unset=partial).items():
+        print(name, value)
+        setattr(product, name, value)
+    await session.commit()
+    return product
