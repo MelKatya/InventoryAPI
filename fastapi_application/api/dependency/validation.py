@@ -49,14 +49,14 @@ def validate_roles(roles: set[str]):
     def wrapper(func):
         @wraps(func)
         async def validate(*args, **kwargs):
-            token: dict | None = dict(**kwargs).get("token")
-            if not token:
+            payload: dict | None = kwargs.get("payload")
+            if not payload:
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Invalid token error"
                 )
 
-            current_roles = set(token.get("roles"))
+            current_roles = set(payload.get("roles"))
             if not roles.intersection(current_roles):
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
