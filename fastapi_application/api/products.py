@@ -92,4 +92,16 @@ async def update_product_partial(
     product_update = ProductCreate(**product_update.model_dump(), supplier_id=creator_id)
     return await prod.update_product(session, product, product_update, partial=True)
 
+@router.delete("/{product_id}")
+@validate_roles({"admin", "supplier"})
+async def delete_product(
+    product: Product = Depends(product_by_id),
+    session: AsyncSession = Depends(db_helper.session_getter),
+    payload: dict = Depends(validate_access_token),
+):
+    creator_id = product.supplier_id
+    check_creator(creator_id, payload, "product")
+
+    return await prod.delete_product(session, product)
+
 
