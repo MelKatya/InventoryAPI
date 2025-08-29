@@ -31,7 +31,6 @@ def upgrade() -> None:
         {"name": "new"},
         {"name": "confirmed"},
         {"name": "cancelled"},
-        {"name": "shipped"},
     ])
 
 
