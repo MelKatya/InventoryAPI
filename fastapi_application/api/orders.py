@@ -1,0 +1,25 @@
+from typing import Literal, Annotated
+
+from fastapi import APIRouter,Depends
+from sqlalchemy.ext.asyncio.session import AsyncSession
+
+from api.dependency.order import order_by_id
+from api.dependency.validation import validate_roles, validate_access_token
+from api.utils import check_creator
+from core.models import db_helper, Order
+from crud import order as ord
+
+router = APIRouter(tags=["Orders"])
+
+
+@router.post("/create")
+@validate_roles({"admin", "customer"})
+async def create_order(
+    session: AsyncSession = Depends(db_helper.session_getter),
+    payload: dict = Depends(validate_access_token)
+):
+    customer_id = int(payload.get("sub"))
+    order = await ord.create_order(session=session, customer_id=customer_id)
+    return order
+
+
