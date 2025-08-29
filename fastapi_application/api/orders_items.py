@@ -2,10 +2,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from api.dependency.order import order_by_id
+from api.dependency.orders_item import item_by_id
 from api.dependency.product import product_by_id
 from api.dependency.validation import validate_roles, validate_access_token
 from api.utils import check_creator
-from core.models import db_helper, Order, Product
+from core.models import db_helper, Order, Product, OrderItem
 from crud import order_item as ord_itm
 
 router = APIRouter(tags=["OrdersItems"])
@@ -43,4 +44,14 @@ async def get_all_items(
         session=session,
         customer_id=int(payload.get("sub"))
     )
+
+
+@router.get("{order_id}")
+@validate_roles({"admin", "customer"})
+async def get_all_orders_id_items(
+    session: AsyncSession = Depends(db_helper.session_getter),
+    payload: dict = Depends(validate_access_token),
+    order: Order = Depends(order_by_id),
+):
+    return await ord_itm.get_order_id_items(session=session, order_id=order.id)
 
