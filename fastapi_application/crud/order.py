@@ -22,6 +22,15 @@ async def get_order_by_id(session: AsyncSession, order_id: int) -> Order | None:
     return order.one_or_none()
 
 
+async def update_order_status(
+    session: AsyncSession,
+    order: Order,
+    new_status: str
+) -> Order:
+    order.status_id = settings.mappings.statuses.get(new_status)
+    await session.commit()
+    return order
+
 
 async def get_all_orders(session: AsyncSession, customer_id: int):
     stmt = select(Order).filter_by(customer_id=customer_id).order_by(Order.id)
