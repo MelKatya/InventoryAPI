@@ -51,3 +51,12 @@ async def get_order_id_items(
     stmt = select(OrderItem).filter_by(order_id=order_id).order_by(OrderItem.id)
     all_items =  await session.scalars(stmt)
     return all_items.all()
+
+
+async def get_item_by_id(
+    session: AsyncSession,
+    item_id: int,
+):
+    stmt = select(OrderItem).filter_by(id=item_id)
+    result = await session.scalars(stmt)
+    return result.one_or_none()
