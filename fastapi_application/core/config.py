@@ -27,6 +27,7 @@ class DatabaseConfig(BaseModel):
 
 class ReferenceMappings(BaseModel):
     roles: dict[str, int] = {"admin": 1, "supplier": 2, "customer": 3}
+    statuses: dict[str, int] = {"new": 1, "confirmed": 2, "cancelled": 3}
 
 
 class JWTConfig(BaseModel):
