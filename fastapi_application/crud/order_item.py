@@ -60,3 +60,29 @@ async def get_item_by_id(
     stmt = select(OrderItem).filter_by(id=item_id)
     result = await session.scalars(stmt)
     return result.one_or_none()
+
+
+async def update_item(
+    session: AsyncSession,
+    orders_item: OrderItem,
+    quantity: int,
+):
+    product: Product = await get_product_by_id(session=session, product_id=orders_item.product_id)
+
+    total_products = product.stock_quantity + orders_item.quantity
+
+    if quantity <= orders_item.quantity:
+        product.stock_quantity += orders_item.quantity - quantity
+        orders_item.quantity = quantity
+    else:
+        if total_products >= quantity:
+            product.stock_quantity = total_products - quantity
+            orders_item.quantity = quantity
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Too much quantity. Quantity of product is {total_products}"
+            )
+
+    await session.commit()
+    return orders_item
