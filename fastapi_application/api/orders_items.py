@@ -46,7 +46,7 @@ async def get_all_items(
     )
 
 
-@router.get("{order_id}")
+@router.get("/{order_id}")
 @validate_roles({"admin", "customer"})
 async def get_all_orders_id_items(
     session: AsyncSession = Depends(db_helper.session_getter),
@@ -56,7 +56,7 @@ async def get_all_orders_id_items(
     return await ord_itm.get_order_id_items(session=session, order_id=order.id)
 
 
-@router.patch("{order_item_id}")
+@router.patch("/{order_item_id}")
 @validate_roles({"admin", "customer"})
 async def update_item(
     quantity: int,
@@ -68,3 +68,11 @@ async def update_item(
     return await ord_itm.update_item(session=session, orders_item=orders_item, quantity=quantity)
 
 
+@router.delete("/{order_item_id}")
+@validate_roles({"admin", "customer"})
+async def delete_item(
+    session: AsyncSession = Depends(db_helper.session_getter),
+    payload: dict = Depends(validate_access_token),
+    orders_item: OrderItem = Depends(item_by_id),
+):
+    await ord_itm.delete_item(session=session, orders_item=orders_item)
