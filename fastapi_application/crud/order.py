@@ -16,4 +16,9 @@ async def create_order(session: AsyncSession, customer_id: int) -> Order:
     return order
 
 
+async def get_order_by_id(session: AsyncSession, order_id: int) -> Order | None:
+    stmt = select(Order).filter_by(id=order_id)
+    order = await session.scalars(stmt)
+    return order.one_or_none()
+
 
