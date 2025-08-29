@@ -86,3 +86,14 @@ async def update_item(
 
     await session.commit()
     return orders_item
+
+
+async def delete_item(
+    session: AsyncSession,
+    orders_item: OrderItem,
+) -> None:
+    product: Product = await get_product_by_id(session=session, product_id=orders_item.product_id)
+    product.stock_quantity += orders_item.quantity
+
+    await session.delete(orders_item)
+    await session.commit()
