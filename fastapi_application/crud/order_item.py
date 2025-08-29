@@ -1,8 +1,11 @@
 from fastapi import HTTPException, status
 
 from sqlalchemy.ext.asyncio.session import AsyncSession
+from sqlalchemy.sql.expression import select
+from sqlalchemy.orm import selectinload
 
 from core.models import Order, Product, OrderItem
+from crud.product import get_product_by_id
 
 
 async def create_orders_item(
@@ -30,3 +33,12 @@ async def create_orders_item(
     await session.commit()
 
     return orders_item
+
+
+async def get_all_items(
+    session: AsyncSession,
+    customer_id: int,
+):
+    stmt = select(OrderItem).join(OrderItem.orders).filter_by(customer_id=customer_id)
+    all_items = await session.scalars(stmt)
+    return all_items.all()
