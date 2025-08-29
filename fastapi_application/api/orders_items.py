@@ -33,3 +33,14 @@ async def create_item(
     return orders_items
 
 
+@router.get("")
+@validate_roles({"admin", "customer"})
+async def get_all_items(
+    session: AsyncSession = Depends(db_helper.session_getter),
+    payload: dict = Depends(validate_access_token),
+):
+    return await ord_itm.get_all_items(
+        session=session,
+        customer_id=int(payload.get("sub"))
+    )
+
