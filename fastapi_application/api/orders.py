@@ -23,3 +23,13 @@ async def create_order(
     return order
 
 
+@router.get("")
+@validate_roles({"admin", "customer"})
+async def get_all_orders(
+    session: AsyncSession = Depends(db_helper.session_getter),
+    payload: dict = Depends(validate_access_token)
+):
+    return await ord.get_all_orders(session=session, customer_id=int(payload.get("sub")))
+
+
+
