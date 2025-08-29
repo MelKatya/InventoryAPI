@@ -22,3 +22,8 @@ async def get_order_by_id(session: AsyncSession, order_id: int) -> Order | None:
     return order.one_or_none()
 
 
+
+async def get_all_orders(session: AsyncSession, customer_id: int):
+    stmt = select(Order).filter_by(customer_id=customer_id).order_by(Order.id)
+    orders = await session.scalars(stmt)
+    return orders.all()
