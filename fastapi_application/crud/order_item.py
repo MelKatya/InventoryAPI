@@ -42,3 +42,12 @@ async def get_all_items(
     stmt = select(OrderItem).join(OrderItem.orders).filter_by(customer_id=customer_id)
     all_items = await session.scalars(stmt)
     return all_items.all()
+
+
+async def get_order_id_items(
+    session: AsyncSession,
+    order_id: int,
+):
+    stmt = select(OrderItem).filter_by(order_id=order_id).order_by(OrderItem.id)
+    all_items =  await session.scalars(stmt)
+    return all_items.all()
