@@ -55,3 +55,16 @@ async def get_all_orders_id_items(
 ):
     return await ord_itm.get_order_id_items(session=session, order_id=order.id)
 
+
+@router.patch("{order_item_id}")
+@validate_roles({"admin", "customer"})
+async def update_item(
+    quantity: int,
+    session: AsyncSession = Depends(db_helper.session_getter),
+    payload: dict = Depends(validate_access_token),
+    orders_item: OrderItem = Depends(item_by_id),
+):
+    # добавить проверку создателя
+    return await ord_itm.update_item(session=session, orders_item=orders_item, quantity=quantity)
+
+
